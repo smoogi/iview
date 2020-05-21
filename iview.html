@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <!-- Display image, show mouse position and pixel values
 Author: Changjiang Yang
-Date:	08/14/2016
-TODO:	Add drag and drop
+Forked by: Nitis Monburinon
+Date:	05/20/2020
 -->
 <html>
 <head>
@@ -14,13 +14,33 @@ div.footer {
 	margin: 0 auto;
 	background: #0072BB;
 	color:#fff;
+	width: 100%;
+}
+div.menu {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 5 auto;
+	padding: 15px;
+	background: #0072BB;
+	color:#fff;
+	border-radius: 25px;
+}
+div#record {
+	background: lightblue;
+	color: black;
+	padding: 5px;
 }
 </style>
 </head>
 
 <body>
 
-<p>Open image: <input type="file" id="inputImage"/></p>
+<div class="menu">
+    <p>Open image <input type="file" id="inputImage"/></p>
+    <p>Click to record mouse positions, or <input type="button" onclick="clearRecord()" value="Clear"/></p>
+    <div id="record"></div>
+</div>
 
 <canvas id="canvas" style="margin:12px;"></canvas>
 
@@ -44,12 +64,25 @@ function copyMousePos(evt) {
 	var rect = cvs.getBoundingClientRect();
 	var x = parseInt(evt.clientX - rect.left);
 	var y = parseInt(evt.clientY - rect.top);
-	copyText = x+';'+y
+	copyText = x+','+y
 	navigator.clipboard.writeText(copyText).then(function() {
 	  console.log('ok')
 	}, function() {
 	  console.log('ko')
 	});
+
+	record = document.getElementById("record");
+	node = document.createElement("p");
+	text = document.createTextNode(copyText);
+	node.appendChild(text);
+	record.appendChild(node);
+}
+
+function clearRecord(evt) {
+	record = document.getElementById("record");
+	while(record.hasChildNodes()){
+		record.removeChild(record.firstChild);
+	}
 }
 
 function mousePos(evt) {
